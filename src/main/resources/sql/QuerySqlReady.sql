@@ -59,6 +59,10 @@ WHERE d.age IS NOT NULL
 group by i.type;
 
 -- 8. Найти всех гномов старше среднего возраста (по всем гномам в базе), которые не владеют никакими предметами.
+-- SELECT d.dwarf_id, d.name
+-- FROM dwarves d
+--          LEFT OUTER JOIN items i ON d.dwarf_id = i.owner_id
+-- HAVING age > avg(age);
 SELECT d.dwarf_id, d.name, d.age
 FROM Dwarves d
          LEFT JOIN Items i ON d.dwarf_id = i.owner_id
