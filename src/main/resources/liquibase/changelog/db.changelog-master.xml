@@ -7,4 +7,9 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <include file="liquibase/changelog/changelog-1-init.sql"/>
+    <include file="liquibase/changelog/changelog-2-add-leader.xml"/>
+    <include file="liquibase/changelog/changelog-3-update-columns.xml"/>
+    <include file="liquibase/changelog/changelog-4-add-relationships.xml"/>
+    <include file="liquibase/changelog/changelog-5-tag-before-big-refactor.xml"/>
+
 </databaseChangeLog>

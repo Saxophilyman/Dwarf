@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Шаг 4: изменить description в Tasks -->
+    <changeSet id="20250417-change-description-to-text" author="Saxophilyman">
+        <modifyDataType tableName="tasks" columnName="description" newDataType="text"/>
+    </changeSet>
+
+    <!-- Шаг 5: изменить type в Items -->
+    <changeSet id="20250417-change-type-in-items" author="Saxophilyman">
+        <modifyDataType tableName="items" columnName="type" newDataType="varchar(50)"/>
+    </changeSet>
+
+</databaseChangeLog>

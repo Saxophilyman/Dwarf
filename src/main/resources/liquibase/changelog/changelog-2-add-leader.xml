@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Твои changeSet'ы пойдут сюда -->
+    <changeSet id="20250417-add-leader-drop-mission" author="Saxophilyman">
+        <!-- Добавляем колонку leader_id -->
+        <addColumn tableName="squads">
+            <column name="leader_id" type="int"/>
+        </addColumn>
+
+        <!-- Удаляем колонку mission -->
+        <dropColumn tableName="squads" columnName="mission"/>
+
+        <!-- Добавляем внешний ключ на Dwarves -->
+        <addForeignKeyConstraint baseTableName="squads" baseColumnNames="leader_id" constraintName="fk_squads_leader"
+                                 referencedTableName="dwarves"
+                                 referencedColumnNames="dwarf_id"
+                                 onDelete="SET NULL"/>
+    </changeSet>
+
+</databaseChangeLog>

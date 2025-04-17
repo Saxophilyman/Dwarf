@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="20250417" author="Saxophilyman">
+        <!-- 1. Создаём таблицу Relationships -->
+        <createTable tableName="relationships">
+            <column name="dwarf_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="related_to" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="relationship" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- 2. Ограничение допустимых значений relationship -->
+        <sql>
+            ALTER TABLE relationships
+                ADD CONSTRAINT chk_relationship_type
+                    CHECK (relationship IN ('Друг', 'Супруг', 'Родитель'));
+        </sql>
+
+
+        <!-- 3. Внешний ключ на dwarf_id -->
+        <addForeignKeyConstraint baseTableName="relationships"
+                                 baseColumnNames="dwarf_id"
+                                 constraintName="fk_relationships_dwarf"
+                                 referencedTableName="dwarves"
+                                 referencedColumnNames="dwarf_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- 4. Внешний ключ на related_to -->
+        <addForeignKeyConstraint baseTableName="relationships"
+                                 baseColumnNames="related_to"
+                                 constraintName="fk_relationships_related"
+                                 referencedTableName="dwarves"
+                                 referencedColumnNames="dwarf_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- 5. Добавляем комментарии к колонкам -->
+        <setColumnRemarks tableName="relationships" columnName="dwarf_id"
+                          remarks="Уникальный идентификатор гнома (ссылка на dwarf_id из Dwarves)"/>
+        <setColumnRemarks tableName="relationships" columnName="related_to"
+                          remarks="Идентификатор другого гнома (ссылка на dwarf_id из Dwarves)"/>
+        <setColumnRemarks tableName="relationships" columnName="relationship"
+                          remarks="Тип отношения (например, 'Друг', 'Супруг', 'Родитель')"/>
+
+        <!-- 6. Роллбэк: удаление таблицы -->
+        <rollback>
+            <dropTable tableName="relationships"/>
+        </rollback>
+
+    </changeSet>
+
+</databaseChangeLog>
