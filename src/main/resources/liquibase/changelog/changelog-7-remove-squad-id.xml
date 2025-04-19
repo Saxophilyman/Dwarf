@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <!-- 1. Удаление squad_id из таблицы dwarves -->
+    <changeSet id="20250419-4-drop-squad-id-from-dwarves" author="Saxophilyman">
+        <dropColumn tableName="dwarves" columnName="squad_id"/>
+    </changeSet>
+
+</databaseChangeLog>

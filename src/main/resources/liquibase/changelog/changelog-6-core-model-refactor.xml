@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- 1. Таблица fortresses -->
+    <changeSet id="20250419-1-create-fortresses" author="Saxophilyman">
+        <createTable tableName="fortresses">
+            <column name="fortress_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="location" type="varchar(255)"/>
+            <column name="founded_year" type="int"/>
+            <column name="depth" type="int"/>
+            <column name="population" type="int"/>
+        </createTable>
+
+        <setColumnRemarks tableName="fortresses" columnName="fortress_id" remarks="Уникальный идентификатор крепости"/>
+        <setColumnRemarks tableName="fortresses" columnName="name" remarks="Название крепости"/>
+        <setColumnRemarks tableName="fortresses" columnName="location" remarks="Местоположение крепости"/>
+        <setColumnRemarks tableName="fortresses" columnName="founded_year" remarks="Год основания"/>
+        <setColumnRemarks tableName="fortresses" columnName="depth" remarks="Глубина крепости"/>
+        <setColumnRemarks tableName="fortresses" columnName="population" remarks="Численность населения"/>
+    </changeSet>
+
+    <!-- 2. Таблица skills -->
+    <changeSet id="20250419-2-create-skills" author="Saxophilyman">
+        <createTable tableName="skills">
+            <column name="skill_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="varchar(100)"/>
+            <column name="description" type="text"/>
+            <column name="skill_type" type="varchar(50)"/>
+        </createTable>
+
+        <setColumnRemarks tableName="skills" columnName="skill_id" remarks="Уникальный идентификатор навыка"/>
+        <setColumnRemarks tableName="skills" columnName="name" remarks="Название навыка"/>
+        <setColumnRemarks tableName="skills" columnName="category" remarks="Категория навыка"/>
+        <setColumnRemarks tableName="skills" columnName="description" remarks="Описание навыка"/>
+        <setColumnRemarks tableName="skills" columnName="skill_type" remarks="Тип навыка"/>
+    </changeSet>
+
+    <!-- 3. Модификация таблицы dwarves -->
+    <changeSet id="20250419-3-update-dwarves-core" author="Saxophilyman">
+        <addColumn tableName="dwarves">
+            <column name="fortress_id" type="int"/>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="dwarves"
+                                 baseColumnNames="fortress_id"
+                                 constraintName="fk_dwarves_fortress"
+                                 referencedTableName="fortresses"
+                                 referencedColumnNames="fortress_id"
+                                 onDelete="SET NULL"/>
+        <setColumnRemarks tableName="dwarves" columnName="fortress_id"
+                          remarks="Идентификатор крепости, к которой принадлежит гном"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -11,5 +11,11 @@
     <include file="liquibase/changelog/changelog-3-update-columns.xml"/>
     <include file="liquibase/changelog/changelog-4-add-relationships.xml"/>
     <include file="liquibase/changelog/changelog-5-tag-before-big-refactor.xml"/>
+    <include file="liquibase/changelog/changelog-6-core-model-refactor.xml"/>
+    <include file="liquibase/changelog/changelog-7-remove-squad-id.xml"/>
+    <include file="liquibase/changelog/changelog-8-create-dwarf-skills.xml"/>
+    <include file="liquibase/changelog/changelog-9-create-dwarf-assignments.xml"/>
+    <include file="liquibase/changelog/changelog-10-create-resources.xml"/>
+    <include file="liquibase/changelog/changelog-11-create-equipment.xml"/>
 
 </databaseChangeLog>

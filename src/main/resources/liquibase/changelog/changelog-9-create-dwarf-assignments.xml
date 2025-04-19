@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица dwarf_assignments  -->
+    <!-- Назначения гномов (Dwarf_Assignments): Привязаны к гному (n:1), содержат информацию о рабочих задачах-->
+    <changeSet id="20250419-6-create-dwarf-assignments" author="Saxophilyman">
+        <createTable tableName="dwarf_assignments">
+            <column name="assignment_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="dwarf_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="assignment_type" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="start_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="end_date" type="date"/>
+        </createTable>
+
+        <!-- Внешний ключ на dwarves -->
+        <addForeignKeyConstraint
+                baseTableName="dwarf_assignments"
+                baseColumnNames="dwarf_id"
+                constraintName="fk_assignment_dwarf"
+                referencedTableName="dwarves"
+                referencedColumnNames="dwarf_id"
+                onDelete="CASCADE"/>
+
+
+        <setColumnRemarks tableName="dwarf_assignments" columnName="assignment_id"
+                          remarks="Уникальный идентификатор назначения"/>
+        <setColumnRemarks tableName="dwarf_assignments" columnName="dwarf_id"
+                          remarks="Идентификатор гнома, которому назначена задача"/>
+        <setColumnRemarks tableName="dwarf_assignments" columnName="assignment_type"
+                          remarks="Тип назначения (например, фермер, кузнец, охотник)"/>
+        <setColumnRemarks tableName="dwarf_assignments" columnName="start_date"
+                          remarks="Дата начала назначения"/>
+        <setColumnRemarks tableName="dwarf_assignments" columnName="end_date"
+                          remarks="Дата окончания назначения (может быть NULL)"/>
+
+        <!-- Индекс для ускорения поиска по dwarf_id -->
+        <createIndex
+                indexName="idx_dwarf_assignments_dwarf_id"
+                tableName="dwarf_assignments">
+            <column name="dwarf_id"/>
+        </createIndex>
+
+    </changeSet>
+
+</databaseChangeLog>

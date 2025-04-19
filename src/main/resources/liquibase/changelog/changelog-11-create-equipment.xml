@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Equipment  -->
+    <!-- Снаряжение (Equipment): Используется гномами (n:m) и отрядами (n:m), изготавливается из материалов (n:1)-->
+    <changeSet id="20250420-2-create-equipment" author="Saxophilyman">
+        <createTable tableName="equipment">
+            <column name="equipment_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(50)"/>
+            <column name="material_id" type="int"/>
+            <column name="quality" type="varchar(50)"/>
+        </createTable>
+
+        <!-- 2. Внешний ключ на resources -->
+        <addForeignKeyConstraint baseTableName="equipment"
+                                 baseColumnNames="material_id"
+                                 constraintName="fk_equipment_material"
+                                 referencedTableName="resources"
+                                 referencedColumnNames="resource_id"
+                                 onDelete="SET NULL"/>
+
+        <!-- 3. Комментарии -->
+        <setColumnRemarks tableName="equipment" columnName="equipment_id"
+                          remarks="Уникальный идентификатор снаряжения"/>
+        <setColumnRemarks tableName="equipment" columnName="name"
+                          remarks="Название снаряжения"/>
+        <setColumnRemarks tableName="equipment" columnName="type"
+                          remarks="Тип снаряжения (например, weapon, armor, tool)"/>
+        <setColumnRemarks tableName="equipment" columnName="material_id"
+                          remarks="Идентификатор ресурса, из которого сделано снаряжение"/>
+        <setColumnRemarks tableName="equipment" columnName="quality"
+                          remarks="Качество снаряжения (например, low, standard, high, legendary)"/>
+
+    </changeSet>
+
+</databaseChangeLog>

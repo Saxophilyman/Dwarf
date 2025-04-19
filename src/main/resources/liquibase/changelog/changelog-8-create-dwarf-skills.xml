@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица dwarf_skills  -->
+    <!-- Гномы (Dwarves) связаны с навыками (n:m)-->
+    <changeSet id="20250419-5-create-dwarf-skills" author="Saxophilyman">
+        <createTable tableName="dwarf_skills">
+            <column name="dwarf_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="skill_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="level" type="int"/>
+            <column name="experience" type="int"/>
+            <column name="date" type="date"/>
+        </createTable>
+
+        <!-- Внешний ключ: dwarf_id → dwarves.dwarf_id -->
+        <addForeignKeyConstraint baseTableName="dwarf_skills"
+                                 baseColumnNames="dwarf_id"
+                                 constraintName="fk_dwarf_skills_dwarf"
+                                 referencedTableName="dwarves"
+                                 referencedColumnNames="dwarf_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Внешний ключ: skill_id → skills.skill_id -->
+        <addForeignKeyConstraint baseTableName="dwarf_skills" baseColumnNames="skill_id"
+                                 constraintName="fk_dwarf_skills_skill"
+                                 referencedTableName="skills"
+                                 referencedColumnNames="skill_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Уникальное ограничение на пару (dwarf_id, skill_id) -->
+        <addUniqueConstraint
+                tableName="dwarf_skills"
+                columnNames="dwarf_id, skill_id"
+                constraintName="uk_dwarf_skill_unique"/>
+
+        <!-- Ограничения на допустимые значения -->
+        <sql>
+            ALTER TABLE dwarf_skills
+                ADD CONSTRAINT chk_level_min CHECK (level >= 1);
+        </sql>
+
+        <sql>
+            ALTER TABLE dwarf_skills
+                ADD CONSTRAINT chk_experience_range CHECK (experience BETWEEN 0 AND 100000);
+        </sql>
+
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="dwarf_skills" columnName="dwarf_id"
+                          remarks="Идентификатор гнома, владеющего навыком"/>
+        <setColumnRemarks tableName="dwarf_skills" columnName="skill_id"
+                          remarks="Идентификатор навыка"/>
+        <setColumnRemarks tableName="dwarf_skills" columnName="level"
+                          remarks="Уровень владения навыком"/>
+        <setColumnRemarks tableName="dwarf_skills" columnName="experience"
+                          remarks="Опыт гнома по этому навыку"/>
+        <setColumnRemarks tableName="dwarf_skills" columnName="date"
+                          remarks="Дата последнего обновления/использования"/>
+
+    </changeSet>
+
+</databaseChangeLog>

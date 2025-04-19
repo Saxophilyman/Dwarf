@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Resources  -->
+    <!-- Ресурсы (Resources): Добываются, используются в производстве, хранятся-->
+    <changeSet id="20250420-1-create-resources" author="Saxophilyman">
+        <createTable tableName="resources">
+            <column name="resource_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(50)"/>
+            <column name="rarity" type="varchar(50)"/>
+            <column name="description" type="text"/>
+        </createTable>
+
+        <!-- 2. Комментарии -->
+        <setColumnRemarks tableName="resources" columnName="resource_id"
+                          remarks="Уникальный идентификатор ресурса"/>
+        <setColumnRemarks tableName="resources" columnName="name"
+                          remarks="Название ресурса"/>
+        <setColumnRemarks tableName="resources" columnName="type"
+                          remarks="Тип ресурса (например, ore, wood, gem)"/>
+        <setColumnRemarks tableName="resources" columnName="rarity"
+                          remarks="Редкость ресурса (например, common, rare, legendary)"/>
+        <setColumnRemarks tableName="resources" columnName="description"
+                          remarks="Описание ресурса"/>
+    </changeSet>
+
+</databaseChangeLog>
