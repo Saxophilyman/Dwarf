@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Locations  -->
+    <!-- Локации (Locations): Определяют места в крепости, содержат информацию о защищенности и доступности-->
+    <changeSet id="20250422-3-create-locations" author="Saxophilyman">
+        <createTable tableName="locations">
+            <column name="location_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="zone_id" type="int"/>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="zone_type" type="varchar(50)"/>
+            <column name="depth" type="int"/>
+            <column name="access_points" type="int"/>
+            <column name="fortification_level" type="int"/>
+            <column name="wall_integrity" type="int"/>
+            <column name="trap_density" type="int"/>
+            <column name="choke_points" type="int"/>
+        </createTable>
+
+        <!-- 2. Комментарии -->
+        <setColumnRemarks tableName="locations" columnName="location_id"
+                          remarks="Уникальный идентификатор локации"/>
+        <setColumnRemarks tableName="locations" columnName="zone_id"
+                          remarks="Идентификатор зоны (если предусмотрено логикой)"/>
+        <setColumnRemarks tableName="locations" columnName="name"
+                          remarks="Название локации"/>
+        <setColumnRemarks tableName="locations" columnName="zone_type"
+                          remarks="Тип зоны (residential, mine, storage и т.д.)"/>
+        <setColumnRemarks tableName="locations" columnName="depth"
+                          remarks="Глубина (например, уровень подземелья)"/>
+        <setColumnRemarks tableName="locations" columnName="access_points"
+                          remarks="Количество точек доступа к локации"/>
+        <setColumnRemarks tableName="locations" columnName="fortification_level"
+                          remarks="Уровень укреплений зоны (от 0 до 100)"/>
+        <setColumnRemarks tableName="locations" columnName="wall_integrity"
+                          remarks="Целостность стен в процентах"/>
+        <setColumnRemarks tableName="locations" columnName="trap_density"
+                          remarks="Плотность ловушек в локации"/>
+        <setColumnRemarks tableName="locations" columnName="choke_points"
+                          remarks="Количество узких проходов (bottlenecks)"/>
+
+        <!-- 3. Ограничения -->
+        <sql>
+            ALTER TABLE locations
+                ADD CONSTRAINT chk_wall_integrity CHECK (wall_integrity BETWEEN 0 AND 100);
+        </sql>
+        <sql>
+            ALTER TABLE locations
+                ADD CONSTRAINT chk_fortification_level CHECK (fortification_level BETWEEN 0 AND 100);
+        </sql>
+
+        <sql>
+            ALTER TABLE locations
+                ADD CONSTRAINT chk_trap_density CHECK (trap_density >= 0);
+        </sql>
+        <sql>
+            ALTER TABLE locations
+                ADD CONSTRAINT chk_choke_points CHECK (choke_points >= 0);
+        </sql>
+
+
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Military_squads  -->
+    <!-- Военные отряды (Military_Squads): Относятся к крепости (n:1),
+    имеют лидера (n:1), членов (1:n), снаряжение (n:m)-->
+    <changeSet id="20250422-4-create-military-squads" author="Saxophilyman">
+        <createTable tableName="military_squads">
+            <column name="squad_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="formation_type" type="varchar(50)"/>
+            <column name="leader_id" type="int"/>
+            <column name="fortress_id" type="int"/>
+        </createTable>
+
+        <!-- Внешний ключ: leader_id → dwarves -->
+        <addForeignKeyConstraint baseTableName="military_squads"
+                                 baseColumnNames="leader_id"
+                                 constraintName="fk_squads_leader"
+                                 referencedTableName="dwarves"
+                                 referencedColumnNames="dwarf_id"
+                                 onDelete="SET NULL"/>
+
+        <!-- Внешний ключ: fortress_id → fortresses -->
+        <addForeignKeyConstraint baseTableName="military_squads"
+                                 baseColumnNames="fortress_id"
+                                 constraintName="fk_squads_fortress"
+                                 referencedTableName="fortresses"
+                                 referencedColumnNames="fortress_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="military_squads" columnName="squad_id"
+                          remarks="Уникальный идентификатор отряда"/>
+        <setColumnRemarks tableName="military_squads" columnName="name"
+                          remarks="Название отряда"/>
+        <setColumnRemarks tableName="military_squads" columnName="formation_type"
+                          remarks="Тип формирования (например, пехота, кавалерия и т.п.)"/>
+        <setColumnRemarks tableName="military_squads" columnName="leader_id"
+                          remarks="Лидер отряда, гном из таблицы dwarves"/>
+        <setColumnRemarks tableName="military_squads" columnName="fortress_id"
+                          remarks="Идентификатор крепости, которой принадлежит отряд"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Projects  -->
+    <!-- Проекты (Projects): Выполняются в мастерских (n:1), включают работников (n:m), материалы (n:m)-->
+    <changeSet id="20250422-6-create-projects" author="Saxophilyman">
+        <createTable tableName="projects">
+            <column name="project_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(50)"/>
+            <column name="status" type="varchar(50)"/>
+            <column name="priority" type="int"/>
+            <column name="workshop_id" type="int"/>
+        </createTable>
+        
+        <addForeignKeyConstraint baseTableName="projects" baseColumnNames="workshop_id"
+                                 constraintName="fk_projects_workshop"
+                                 referencedTableName="workshops"
+                                 referencedColumnNames="workshop_id"
+                                 onDelete="SET NULL"/>
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="projects" columnName="project_id"
+                          remarks="Уникальный идентификатор проекта"/>
+        <setColumnRemarks tableName="projects" columnName="name"
+                          remarks="Название проекта"/>
+        <setColumnRemarks tableName="projects" columnName="type"
+                          remarks="Тип проекта (строительство, исследование и т.д.)"/>
+        <setColumnRemarks tableName="projects" columnName="status"
+                          remarks="Статус проекта (active, paused, completed и т.д.)"/>
+        <setColumnRemarks tableName="projects" columnName="priority"
+                          remarks="Приоритет выполнения проекта"/>
+        <setColumnRemarks tableName="projects" columnName="workshop_id"
+                          remarks="Мастерская, в которой выполняется проект"/>
+
+        <sql>
+            ALTER TABLE projects
+                ADD CONSTRAINT chk_project_priority CHECK (priority BETWEEN 1 AND 10);
+        </sql>
+
+    </changeSet>
+</databaseChangeLog>

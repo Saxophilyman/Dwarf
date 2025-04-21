@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Workshops  -->
+    <!-- Мастерские (Workshops): Принадлежат крепости (n:1), включают ремесленников (n:m),
+    материалы (n:m), производят продукты (1:n)-->
+    <changeSet id="20250422-1--create-workshops" author="Saxophilyman">
+        <createTable tableName="workshops">
+            <column name="workshop_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(50)"/>
+            <column name="quality" type="varchar(50)"/>
+            <column name="fortress_id" type="int"/>
+        </createTable>
+
+        <!-- Внешний ключ на fortress_id -->
+        <addForeignKeyConstraint baseTableName="workshops"
+                                 baseColumnNames="fortress_id"
+                                 constraintName="fk_workshops_fortress"
+                                 referencedTableName="fortresses"
+                                 referencedColumnNames="fortress_id"
+                                 onDelete="SET NULL"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="workshops" columnName="workshop_id"
+                          remarks="Уникальный идентификатор мастерской"/>
+        <setColumnRemarks tableName="workshops" columnName="name"
+                          remarks="Название мастерской"/>
+        <setColumnRemarks tableName="workshops" columnName="type"
+                          remarks="Тип мастерской (например, forge, kitchen)"/>
+        <setColumnRemarks tableName="workshops" columnName="quality"
+                          remarks="Качество мастерской (low, medium, high)"/>
+        <setColumnRemarks tableName="workshops" columnName="fortress_id"
+                          remarks="Связь с крепостью, которой принадлежит мастерская"/>
+    </changeSet>
+
+</databaseChangeLog>

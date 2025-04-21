@@ -17,5 +17,12 @@
     <include file="liquibase/changelog/changelog-9-create-dwarf-assignments.xml"/>
     <include file="liquibase/changelog/changelog-10-create-resources.xml"/>
     <include file="liquibase/changelog/changelog-11-create-equipment.xml"/>
+    <include file="liquibase/changelog/changelog-12-create-workshops.xml"/>
+    <include file="liquibase/changelog/changelog-13-create-products.xml"/>
+    <include file="liquibase/changelog/changelog-14-create-locations.xml"/>
+    <include file="liquibase/changelog/changelog-15-create-military-squads.xml"/>
+    <include file="liquibase/changelog/changelog-16-create-creatures.xml"/>
+    <include file="/liquibase/changelog/changelog-17-create-projects.xml"/>
+
 
 </databaseChangeLog>

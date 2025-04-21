@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Creatures  -->
+    <!-- Существа (Creatures): Имеют тип, уровень угрозы, связаны с наблюдениями (1:n), атаками (1:n), территориями (1:n)-->
+    <changeSet id="20250422-5-create-creatures" author="Saxophilyman">
+        <createTable tableName="creatures">
+            <column name="creature_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(50)"/>
+            <column name="threat_level" type="varchar(50)"/>
+            <column name="active" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estimated_population" type="int"/>
+        </createTable>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="creatures" columnName="creature_id"
+                          remarks="Уникальный идентификатор существа"/>
+        <setColumnRemarks tableName="creatures" columnName="name"
+                          remarks="Имя или вид существа"/>
+        <setColumnRemarks tableName="creatures" columnName="type"
+                          remarks="Тип существа (зверь, магическое, монстр и т.д.)"/>
+        <setColumnRemarks tableName="creatures" columnName="threat_level"
+                          remarks="Уровень угрозы (низкий, средний, высокий, смертельный)"/>
+        <setColumnRemarks tableName="creatures" columnName="active"
+                          remarks="Флаг активности существа в мире (true/false)"/>
+        <setColumnRemarks tableName="creatures" columnName="estimated_population"
+                          remarks="Оценочная численность в мире"/>
+
+        <!-- Ограничения -->
+        <sql>
+            ALTER TABLE creatures
+                ADD CONSTRAINT chk_threat_level CHECK (threat_level IN ('низкий', 'средний', 'высокий', 'смертельный'));
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

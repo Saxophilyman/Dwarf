@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Products  -->
+    <!-- Продукты (Products): Результаты производства, связаны с материалами (n:1), мастерскими (n:1)-->
+    <changeSet id="20250422-2-create-products" author="Saxophilyman">
+        <createTable tableName="products">
+            <column name="product_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(50)"/>
+            <column name="quality" type="varchar(50)"/>
+            <column name="material_id" type="int"/>
+            <column name="value" type="int"/>
+            <column name="created_by" type="varchar(100)"/>
+            <column name="workshop_id" type="int"/>
+        </createTable>
+
+        <!-- Внешний ключ на resources -->
+        <addForeignKeyConstraint baseTableName="products"
+                                 baseColumnNames="material_id"
+                                 constraintName="fk_products_material"
+                                 referencedTableName="resources"
+                                 referencedColumnNames="resource_id"
+                                 onDelete="SET NULL"/>
+
+        <!-- Внешний ключ на workshops -->
+        <addForeignKeyConstraint baseTableName="products"
+                                 baseColumnNames="workshop_id"
+                                 constraintName="fk_products_workshop"
+                                 referencedTableName="workshops"
+                                 referencedColumnNames="workshop_id"
+                                 onDelete="SET NULL"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="products" columnName="product_id"
+                          remarks="Уникальный идентификатор продукта"/>
+        <setColumnRemarks tableName="products" columnName="name"
+                          remarks="Название продукта"/>
+        <setColumnRemarks tableName="products" columnName="type"
+                          remarks="Тип продукта (например, weapon, tool, food)"/>
+        <setColumnRemarks tableName="products" columnName="quality"
+                          remarks="Качество продукта (low, standard, high, legendary)"/>
+        <setColumnRemarks tableName="products" columnName="material_id"
+                          remarks="Ссылка на ресурс, из которого создан продукт"/>
+        <setColumnRemarks tableName="products" columnName="value"
+                          remarks="Ценность продукта в условных единицах"/>
+        <setColumnRemarks tableName="products" columnName="created_by"
+                          remarks="Кем создан продукт"/>
+        <setColumnRemarks tableName="products" columnName="workshop_id"
+                          remarks="Мастерская, где был произведён продукт"/>
+
+    </changeSet>
+
+</databaseChangeLog>
