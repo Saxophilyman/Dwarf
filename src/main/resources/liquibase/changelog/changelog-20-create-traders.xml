@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Traders -->
+    <!-- Торговцы (Traders): Принадлежат караванам (n:1), специализируются на определенных товарах -->
+    <changeSet id="20250424-3-create-traders" author="Saxophilyman">
+        <createTable tableName="traders">
+            <column name="trader_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="race" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="caravan_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="specialty" type="varchar(100)"/>
+        </createTable>
+        
+        <addForeignKeyConstraint baseTableName="traders" baseColumnNames="caravan_id"
+                                 constraintName="fk_traders_caravan"
+                                 referencedTableName="caravans"
+                                 referencedColumnNames="caravan_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="traders" columnName="trader_id"
+                          remarks="Уникальный идентификатор торговца"/>
+        <setColumnRemarks tableName="traders" columnName="name"
+                          remarks="Имя торговца"/>
+        <setColumnRemarks tableName="traders" columnName="race"
+                          remarks="Раса торговца"/>
+        <setColumnRemarks tableName="traders" columnName="caravan_id"
+                          remarks="Караван, к которому относится торговец"/>
+        <setColumnRemarks tableName="traders" columnName="specialty"
+                          remarks="Специализация торговца (например, ткани, оружие)"/>
+
+    </changeSet>
+
+</databaseChangeLog>

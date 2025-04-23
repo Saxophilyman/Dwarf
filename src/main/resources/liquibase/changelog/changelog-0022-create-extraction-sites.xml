@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Extraction_Sites -->
+    <!-- Места добычи (Extraction_Sites): Связаны с ресурсами (n:1), содержат информацию о местах добычи -->
+    <changeSet id="20250424-5-create-extraction-sites" author="Saxophilyman">
+        <createTable tableName="extraction_sites">
+            <column name="site_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="resource_id" type="int"/>
+            <column name="depth" type="int"/>
+            <column name="accessibility" type="varchar(50)"/>
+        </createTable>
+
+        <!-- Внешний ключ на Resources -->
+        <addForeignKeyConstraint baseTableName="extraction_sites"
+                                 baseColumnNames="resource_id"
+                                 constraintName="fk_extraction_sites_resource"
+                                 referencedTableName="resources"
+                                 referencedColumnNames="resource_id"
+                                 onDelete="SET NULL"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="extraction_sites" columnName="site_id"
+                          remarks="Уникальный идентификатор места добычи"/>
+        <setColumnRemarks tableName="extraction_sites" columnName="name"
+                          remarks="Название или обозначение места добычи"/>
+        <setColumnRemarks tableName="extraction_sites" columnName="type"
+                          remarks="Тип месторождения (шахта, карьера и т.д.)"/>
+        <setColumnRemarks tableName="extraction_sites" columnName="resource_id"
+                          remarks="Идентификатор ресурса, добываемого на участке"/>
+        <setColumnRemarks tableName="extraction_sites" columnName="depth"
+                          remarks="Глубина месторождения (в метрах или уровнях)"/>
+        <setColumnRemarks tableName="extraction_sites" columnName="accessibility"
+                          remarks="Степень доступности (например, легкодоступен, труднодоступен)"/>
+
+    </changeSet>
+
+</databaseChangeLog>

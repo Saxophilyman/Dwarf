@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Caravans  -->
+    <!-- Караваны (Caravans): Посещают крепость, включают торговцев (1:n), товары (1:n), участвуют в транзакциях (1:n)-->
+    <changeSet id="20250424-2-create-cravans" author="Saxophilyman">
+        <createTable tableName="caravans">
+            <column name="caravan_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="arrival_date" type="date"/>
+            <column name="departure_date" type="date"/>
+            <column name="civilization_type" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fortress_id" type="int"/>
+        </createTable>
+        
+        <addForeignKeyConstraint baseTableName="caravans" baseColumnNames="fortress_id"
+                                 constraintName="fk_caravans_fortress"
+                                 referencedTableName="fortresses"
+                                 referencedColumnNames="fortress_id"
+                                 onDelete="SET NULL"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="caravans" columnName="caravan_id"
+                          remarks="Уникальный идентификатор каравана"/>
+        <setColumnRemarks tableName="caravans" columnName="arrival_date"
+                          remarks="Дата прибытия каравана в крепость"/>
+        <setColumnRemarks tableName="caravans" columnName="departure_date"
+                          remarks="Дата отбытия каравана"/>
+        <setColumnRemarks tableName="caravans" columnName="civilization_type"
+                          remarks="Тип цивилизации, которой принадлежит караван"/>
+        <setColumnRemarks tableName="caravans" columnName="fortress_id"
+                          remarks="Крепость, которую посетил караван"/>
+        
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица fortress_resources -->
+    <!-- Связывает крепости с доступными ресурсами (n:m) -->
+    <changeSet id="20250424-6-create-fortress-resources" author="Saxophilyman">
+        <createTable tableName="fortress_resources">
+            <column name="fortress_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="resource_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="int"/>
+            <column name="discovery_date" type="date"/>
+        </createTable>
+
+        <!-- Составной первичный ключ (fortress_id + resource_id) -->
+        <addPrimaryKey tableName="fortress_resources"
+                       columnNames="fortress_id, resource_id"
+                       constraintName="pk_fortress_resources"/>
+
+
+        <addForeignKeyConstraint baseTableName="fortress_resources"
+                                 baseColumnNames="fortress_id"
+                                 constraintName="fk_fortress_resource_fortress"
+                                 referencedTableName="fortresses"
+                                 referencedColumnNames="fortress_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="fortress_resources"
+                                 baseColumnNames="resource_id"
+                                 constraintName="fk_fortress_resource_resource"
+                                 referencedTableName="resources"
+                                 referencedColumnNames="resource_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="fortress_resources" columnName="fortress_id"
+                          remarks="Идентификатор крепости"/>
+        <setColumnRemarks tableName="fortress_resources" columnName="resource_id"
+                          remarks="Идентификатор ресурса"/>
+        <setColumnRemarks tableName="fortress_resources" columnName="quantity"
+                          remarks="Количество ресурса в крепости"/>
+        <setColumnRemarks tableName="fortress_resources" columnName="discovery_date"
+                          remarks="Дата, когда ресурс был обнаружен в крепости"/>
+
+    </changeSet>
+
+</databaseChangeLog>

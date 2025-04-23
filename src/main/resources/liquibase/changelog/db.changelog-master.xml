@@ -23,6 +23,12 @@
     <include file="liquibase/changelog/changelog-15-create-military-squads.xml"/>
     <include file="liquibase/changelog/changelog-16-create-creatures.xml"/>
     <include file="/liquibase/changelog/changelog-17-create-projects.xml"/>
+    <include file="/liquibase/changelog/changelog-18-create-expeditions.xml"/>
+    <include file="/liquibase/changelog/changelog-19-create-caravans.xml"/>
+    <include file="/liquibase/changelog/changelog-20-create-traders.xml"/>
+    <include file="/liquibase/changelog/changelog-21-create-orders.xml"/>
+    <include file="/liquibase/changelog/changelog-0022-create-extraction-sites.xml"/>
+    <include file="/liquibase/changelog/changelog-0023-create-fortress-resources.xml"/>
 
 
 </databaseChangeLog>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Expeditions  -->
+    <!-- Экспедиции (Expeditions): Включают участников (1:n), посещают места (1:n), обнаруживают артефакты (1:n)-->
+    <changeSet id="20250424-1-create-expeditions" author="Saxophilyman">
+        <createTable tableName="expeditions">
+            <column name="expedition_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="destination" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="departure_date" type="date"/>
+            <column name="return_date" type="date"/>
+            <column name="status" type="varchar(50)"/>
+        </createTable>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="expeditions" columnName="expedition_id"
+                          remarks="Уникальный идентификатор экспедиции"/>
+        <setColumnRemarks tableName="expeditions" columnName="destination"
+                          remarks="Место назначения экспедиции"/>
+        <setColumnRemarks tableName="expeditions" columnName="departure_date"
+                          remarks="Дата отправления экспедиции"/>
+        <setColumnRemarks tableName="expeditions" columnName="return_date"
+                          remarks="Дата возвращения экспедиции"/>
+        <setColumnRemarks tableName="expeditions" columnName="status"
+                          remarks="Статус экспедиции (в пути, завершена и т. д.)"/>
+
+    </changeSet>
+
+</databaseChangeLog>

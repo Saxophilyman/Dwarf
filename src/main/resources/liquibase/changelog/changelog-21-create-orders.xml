@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Orders -->
+    <!-- Приказы (Orders): Связаны с проектами (n:1), содержат информацию о задачах -->
+    <changeSet id="20250424-4-create-orders" author="Saxophilyman">
+        <createTable tableName="orders">
+            <column name="order_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="project_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creation_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="priority" type="int"/>
+            <column name="status" type="varchar(50)"/>
+        </createTable>
+
+        <!-- Внешний ключ на projects -->
+        <addForeignKeyConstraint baseTableName="orders"
+                                 baseColumnNames="project_id"
+                                 constraintName="fk_orders_project"
+                                 referencedTableName="projects"
+                                 referencedColumnNames="project_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="orders" columnName="order_id"
+                          remarks="Уникальный идентификатор приказа"/>
+        <setColumnRemarks tableName="orders" columnName="project_id"
+                          remarks="Проект, к которому относится приказ"/>
+        <setColumnRemarks tableName="orders" columnName="description"
+                          remarks="Описание приказа или задачи"/>
+        <setColumnRemarks tableName="orders" columnName="creation_date"
+                          remarks="Дата создания приказа"/>
+        <setColumnRemarks tableName="orders" columnName="priority"
+                          remarks="Приоритет приказа"/>
+        <setColumnRemarks tableName="orders" columnName="status"
+                          remarks="Текущий статус приказа (например, active, completed)"/>
+
+        <!-- Ограничения (при необходимости) -->
+        <sql>
+            ALTER TABLE orders
+                ADD CONSTRAINT chk_order_priority CHECK (priority &gt;= 1 AND priority &lt;= 10);
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>
