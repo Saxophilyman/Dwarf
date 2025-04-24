@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Squad_Training -->
+    <!-- Тренировки отрядов (Squad_Training): Связаны с отрядами (n:1), содержат данные о тренировках -->
+    <changeSet id="20250425-4-create-squad-training" author="Saxophilyman">
+        <createTable tableName="squad_training">
+            <column name="schedule_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="squad_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="frequency" type="varchar(50)"/>
+            <column name="location_id" type="int"/>
+            <column name="effectiveness" type="int"/>
+            <column name="duration_hours" type="int"/>
+            <column name="date" type="date"/>
+        </createTable>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="squad_training"
+                                 baseColumnNames="squad_id"
+                                 constraintName="fk_training_squad"
+                                 referencedTableName="military_squads"
+                                 referencedColumnNames="squad_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="squad_training"
+                                 baseColumnNames="location_id"
+                                 constraintName="fk_training_location"
+                                 referencedTableName="locations"
+                                 referencedColumnNames="location_id"
+                                 onDelete="SET NULL"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="squad_training" columnName="schedule_id"
+                          remarks="Уникальный идентификатор тренировочного расписания"/>
+        <setColumnRemarks tableName="squad_training" columnName="squad_id"
+                          remarks="Идентификатор отряда"/>
+        <setColumnRemarks tableName="squad_training" columnName="type"
+                          remarks="Тип тренировки (например, ближний бой, стрельба, тактика)"/>
+        <setColumnRemarks tableName="squad_training" columnName="frequency"
+                          remarks="Частота проведения (например, ежедневная, еженедельная)"/>
+        <setColumnRemarks tableName="squad_training" columnName="location_id"
+                          remarks="Локация, в которой проходит тренировка"/>
+        <setColumnRemarks tableName="squad_training" columnName="effectiveness"
+                          remarks="Эффективность тренировки по шкале 0–100"/>
+        <setColumnRemarks tableName="squad_training" columnName="duration_hours"
+                          remarks="Продолжительность тренировки в часах"/>
+        <setColumnRemarks tableName="squad_training" columnName="date"
+                          remarks="Дата тренировки"/>
+
+        <!-- Ограничения -->
+        <sql>
+            ALTER TABLE squad_training
+                ADD CONSTRAINT chk_training_effectiveness CHECK (effectiveness BETWEEN 0 AND 100);
+        </sql>
+        <sql>
+            ALTER TABLE squad_training
+                ADD CONSTRAINT chk_training_duration CHECK (duration_hours >= 1);
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

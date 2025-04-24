@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Stockpile_Contents -->
+    <!-- Связывает склады с хранимыми ресурсами (n:m) -->
+    <changeSet id="20250424-7-create-stockpile-contents" author="Saxophilyman">
+        <createTable tableName="stockpile_contents">
+            <column name="stockpile_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="resource_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quality" type="varchar(50)"/>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="stockpile_contents"
+                       columnNames="stockpile_id, resource_id"
+                       constraintName="pk_stockpile_contents"/>
+
+        <!-- Внешний ключи -->
+        <addForeignKeyConstraint baseTableName="stockpile_contents"
+                                 baseColumnNames="stockpile_id"
+                                 constraintName="fk_stockpile_contents_stockpile"
+                                 referencedTableName="locations"
+                                 referencedColumnNames="location_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="stockpile_contents"
+                                 baseColumnNames="resource_id"
+                                 constraintName="fk_stockpile_contents_resource"
+                                 referencedTableName="resources"
+                                 referencedColumnNames="resource_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="stockpile_contents" columnName="stockpile_id"
+                          remarks="Идентификатор склада (ссылка на локацию)"/>
+        <setColumnRemarks tableName="stockpile_contents" columnName="resource_id"
+                          remarks="Идентификатор ресурса, хранящегося на складе"/>
+        <setColumnRemarks tableName="stockpile_contents" columnName="quantity"
+                          remarks="Количество ресурса на складе"/>
+        <setColumnRemarks tableName="stockpile_contents" columnName="quality"
+                          remarks="Качество ресурса (например, low, standard, high)"/>
+
+    </changeSet>
+</databaseChangeLog>

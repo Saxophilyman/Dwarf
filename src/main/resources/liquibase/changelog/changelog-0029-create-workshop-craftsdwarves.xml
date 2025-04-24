@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Workshop_Craftsdwarves -->
+    <!-- Ремесленники мастерских (Workshop_Craftsdwarves): Связывает мастерские и гномов (n:m) -->
+    <changeSet id="20250424-12-create-workshop-craftsdwarves" author="Saxophilyman">
+        <createTable tableName="workshop_craftsdwarves">
+            <column name="workshop_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dwarf_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assignment_date" type="date"/>
+            <column name="role" type="varchar(100)"/>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="workshop_craftsdwarves"
+                       columnNames="workshop_id, dwarf_id"
+                       constraintName="pk_workshop_craftsdwarves"/>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="workshop_craftsdwarves"
+                                 baseColumnNames="workshop_id"
+                                 constraintName="fk_craftsdwarves_workshop"
+                                 referencedTableName="workshops"
+                                 referencedColumnNames="workshop_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="workshop_craftsdwarves"
+                                 baseColumnNames="dwarf_id"
+                                 constraintName="fk_craftsdwarves_dwarf"
+                                 referencedTableName="dwarves"
+                                 referencedColumnNames="dwarf_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="workshop_craftsdwarves" columnName="workshop_id"
+                          remarks="Идентификатор мастерской, в которой работает ремесленник"/>
+        <setColumnRemarks tableName="workshop_craftsdwarves" columnName="dwarf_id"
+                          remarks="Идентификатор ремесленника"/>
+        <setColumnRemarks tableName="workshop_craftsdwarves" columnName="assignment_date"
+                          remarks="Дата назначения ремесленника в мастерскую"/>
+        <setColumnRemarks tableName="workshop_craftsdwarves" columnName="role"
+                          remarks="Роль ремесленника в мастерской (например, кузнец, плотник)"/>
+    </changeSet>
+
+</databaseChangeLog>

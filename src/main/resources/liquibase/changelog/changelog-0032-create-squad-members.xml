@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+<!-- Таблица Squad_Members -->
+<!-- Члены отрядов (Squad_Members): Связывает гномов с отрядами (n:m), содержит историю членства-->
+    <changeSet id="20250425-1-create-squad-members" author="Saxophilyman">
+        <createTable tableName="squad_members">
+            <column name="squad_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dwarf_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="join_date" type="date"/>
+            <column name="role" type="varchar(100)"/>
+            <column name="exit_date" type="date"/>
+            <column name="exit_reason" type="varchar(255)"/>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="squad_members"
+                       columnNames="squad_id, dwarf_id"
+                       constraintName="pk_squad_members"/>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="squad_members"
+                                 baseColumnNames="squad_id"
+                                 constraintName="fk_squad_members_squad"
+                                 referencedTableName="military_squads"
+                                 referencedColumnNames="squad_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="squad_members"
+                                 baseColumnNames="dwarf_id"
+                                 constraintName="fk_squad_members_dwarf"
+                                 referencedTableName="dwarves"
+                                 referencedColumnNames="dwarf_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="squad_members" columnName="squad_id"
+                          remarks="Отряд, в который входит гном"/>
+        <setColumnRemarks tableName="squad_members" columnName="dwarf_id"
+                          remarks="Гном, входящий в отряд"/>
+        <setColumnRemarks tableName="squad_members" columnName="join_date"
+                          remarks="Дата вступления в отряд"/>
+        <setColumnRemarks tableName="squad_members" columnName="role"
+                          remarks="Роль гнома в отряде (например, командир, боец)"/>
+        <setColumnRemarks tableName="squad_members" columnName="exit_date"
+                          remarks="Дата выхода из отряда (если применимо)"/>
+        <setColumnRemarks tableName="squad_members" columnName="exit_reason"
+                          remarks="Причина выхода из отряда (например, ранен, переведен)"/>
+
+    </changeSet>
+
+</databaseChangeLog>

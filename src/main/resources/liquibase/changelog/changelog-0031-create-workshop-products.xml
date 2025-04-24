@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Workshop_Products -->
+    <!-- Продукты мастерских (Workshop_Products): Связывает мастерские с производимыми продуктами (n:m) -->
+    <changeSet id="20250424-14-create-workshop-products" author="Saxophilyman">
+        <createTable tableName="workshop_products">
+            <column name="workshop_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="production_date" type="date"/>
+            <column name="quantity" type="int"/>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="workshop_products"
+                       columnNames="workshop_id, product_id"
+                       constraintName="pk_workshop_products"/>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="workshop_products"
+                                 baseColumnNames="workshop_id"
+                                 constraintName="fk_workshop_products_workshop"
+                                 referencedTableName="workshops"
+                                 referencedColumnNames="workshop_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="workshop_products" baseColumnNames="product_id"
+                                 constraintName="fk_workshop_products_product"
+                                 referencedTableName="products"
+                                 referencedColumnNames="product_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="workshop_products" columnName="workshop_id"
+                          remarks="Идентификатор мастерской, где был произведен продукт"/>
+        <setColumnRemarks tableName="workshop_products" columnName="product_id"
+                          remarks="Идентификатор произведенного продукта"/>
+        <setColumnRemarks tableName="workshop_products" columnName="production_date"
+                          remarks="Дата производства продукта"/>
+        <setColumnRemarks tableName="workshop_products" columnName="quantity"
+                          remarks="Количество произведенных экземпляров продукта"/>
+
+        <!-- Ограничение на положительное количество -->
+        <sql>
+            ALTER TABLE workshop_products
+                ADD CONSTRAINT chk_workshop_products_quantity CHECK (quantity >= 0);
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

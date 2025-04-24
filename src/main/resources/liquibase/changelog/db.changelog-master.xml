@@ -29,6 +29,25 @@
     <include file="/liquibase/changelog/changelog-21-create-orders.xml"/>
     <include file="/liquibase/changelog/changelog-0022-create-extraction-sites.xml"/>
     <include file="/liquibase/changelog/changelog-0023-create-fortress-resources.xml"/>
+    <include file="/liquibase/changelog/changelog-0024-create-stockpile-contents.xml"/>
+    <include file="/liquibase/changelog/changelog-0025-create-creature-sightings.xml"/>
+    <include file="/liquibase/changelog/changelog-0026-create-creature-attacks.xml"/>
+    <include file="/liquibase/changelog/changelog-0027-create-creature-territories.xml"/>
+    <include file="/liquibase/changelog/changelog-0028-create-dwarf-equipment.xml"/>
+    <include file="/liquibase/changelog/changelog-0029-create-workshop-craftsdwarves.xml"/>
+    <include file="/liquibase/changelog/changelog-0030-create-workshop-materials.xml"/>
+    <include file="/liquibase/changelog/changelog-0031-create-workshop-products.xml"/>
+    <include file="/liquibase/changelog/changelog-0032-create-squad-members.xml"/>
+    <include file="/liquibase/changelog/changelog-0033-create-squad-equipment.xml"/>
+    <include file="/liquibase/changelog/changelog-0034-create-squad-operations.xml"/>
+    <include file="/liquibase/changelog/changelog-0035-create-squad-training.xml"/>
+<!--    <include file="/liquibase/changelog/changelog-0036-create-squad-battles.xml"/>-->
+<!--    <include file="/liquibase/changelog/changelog-0037-create-project-workers.xml"/>-->
+<!--    <include file="/liquibase/changelog/changelog-0038-create-project-materials.xml"/>-->
+<!--    <include file="/liquibase/changelog/changelog-0039-create-project-dependencies.xml"/>-->
+<!--    <include file="/liquibase/changelog/changelog-0040-create-project-zones.xml"/>-->
+
+
 
 
 </databaseChangeLog>

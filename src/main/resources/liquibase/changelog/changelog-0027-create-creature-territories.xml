@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Creature_Attacks -->
+    <!-- Территории существ (Creature_Territories): Связаны с существами (n:1), определяют ареал обитания-->
+    <changeSet id="20250424-10-create-creature-territories" author="Saxophilyman">
+        <createTable tableName="creature_territories">
+            <column name="territory_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="creature_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="danger_level" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="distance_to_fortress" type="int"/>
+        </createTable>
+
+        <!-- Внешний ключ на creatures -->
+        <addForeignKeyConstraint baseTableName="creature_territories"
+                                 baseColumnNames="creature_id"
+                                 constraintName="fk_territories_creature"
+                                 referencedTableName="creatures"
+                                 referencedColumnNames="creature_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="creature_territories" columnName="territory_id"
+                          remarks="Уникальный идентификатор территории"/>
+        <setColumnRemarks tableName="creature_territories" columnName="creature_id"
+                          remarks="Идентификатор существа, которому принадлежит территория"/>
+        <setColumnRemarks tableName="creature_territories" columnName="area"
+                          remarks="Область, занимаемая существом"/>
+        <setColumnRemarks tableName="creature_territories" columnName="danger_level"
+                          remarks="Уровень опасности в данной территории"/>
+        <setColumnRemarks tableName="creature_territories" columnName="distance_to_fortress"
+                          remarks="Расстояние до ближайшей крепости"/>
+
+    </changeSet>
+
+</databaseChangeLog>

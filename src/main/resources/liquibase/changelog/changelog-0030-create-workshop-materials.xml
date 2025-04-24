@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Workshop_Materials -->
+    <!-- Материалы мастерских (Workshop_Materials): Связывает мастерские с используемыми материалами (n:m) -->
+    <changeSet id="20250424-13-create-workshop-materials" author="Saxophilyman">
+        <createTable tableName="workshop_materials">
+            <column name="workshop_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="resource_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_input" type="boolean" defaultValueBoolean="true"/>
+            <column name="quantity" type="int"/>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="workshop_materials"
+                       columnNames="workshop_id, resource_id, is_input"
+                       constraintName="pk_workshop_materials"/>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="workshop_materials"
+                                 baseColumnNames="workshop_id"
+                                 constraintName="fk_materials_workshop"
+                                 referencedTableName="workshops"
+                                 referencedColumnNames="workshop_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="workshop_materials"
+                                 baseColumnNames="resource_id"
+                                 constraintName="fk_materials_resource"
+                                 referencedTableName="resources"
+                                 referencedColumnNames="resource_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="workshop_materials" columnName="workshop_id"
+                          remarks="Мастерская, использующая материал"/>
+        <setColumnRemarks tableName="workshop_materials" columnName="resource_id"
+                          remarks="Ресурс, который используется в мастерской"/>
+        <setColumnRemarks tableName="workshop_materials" columnName="is_input"
+                          remarks="Признак, является ли ресурс входящим материалом (true) или продуктом (false)"/>
+        <setColumnRemarks tableName="workshop_materials" columnName="quantity"
+                          remarks="Количество ресурса, необходимое или произведенное"/>
+
+        <sql>
+            ALTER TABLE workshop_materials
+                ADD CONSTRAINT chk_workshop_materials_quantity CHECK (quantity >= 0);
+        </sql>
+
+    </changeSet>
+</databaseChangeLog>

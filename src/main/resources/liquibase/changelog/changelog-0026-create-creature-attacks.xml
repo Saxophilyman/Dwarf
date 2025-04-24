@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Creature_Attacks -->
+    <!-- Атаки существ (Creature_Attacks): Связаны с существами (n:1), локациями (n:1), структурами защиты (n:m)-->
+    <changeSet id="20250424-9-create-creature-attacks" author="Saxophilyman">
+        <createTable tableName="creature_attacks">
+            <column name="attack_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="creature_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="casualties" type="int"/>
+            <column name="enemy_casualties" type="int"/>
+            <column name="location_id" type="int"/>
+            <column name="outcome" type="varchar(255)"/>
+            <column name="defense_structures_used" type="boolean" defaultValueBoolean="false"/>
+            <column name="military_response_time_minutes" type="int"/>
+        </createTable>
+
+        <!-- Внешний ключ на creatures -->
+        <addForeignKeyConstraint baseTableName="creature_attacks" baseColumnNames="creature_id"
+                                 constraintName="fk_attacks_creature"
+                                 referencedTableName="creatures"
+                                 referencedColumnNames="creature_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Внешний ключ на locations -->
+        <addForeignKeyConstraint baseTableName="creature_attacks" baseColumnNames="location_id"
+                                 constraintName="fk_attacks_location"
+                                 referencedTableName="locations"
+                                 referencedColumnNames="location_id"
+                                 onDelete="SET NULL"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="creature_attacks" columnName="attack_id" remarks="Уникальный идентификатор атаки"/>
+        <setColumnRemarks tableName="creature_attacks" columnName="creature_id" remarks="Существо, совершившее атаку"/>
+        <setColumnRemarks tableName="creature_attacks" columnName="date" remarks="Дата атаки"/>
+        <setColumnRemarks tableName="creature_attacks" columnName="casualties" remarks="Потери со стороны крепости"/>
+        <setColumnRemarks tableName="creature_attacks" columnName="enemy_casualties" remarks="Потери среди существ"/>
+        <setColumnRemarks tableName="creature_attacks" columnName="location_id" remarks="Место, где произошла атака"/>
+        <setColumnRemarks tableName="creature_attacks" columnName="outcome" remarks="Исход атаки"/>
+        <setColumnRemarks tableName="creature_attacks" columnName="defense_structures_used"
+                          remarks="Были ли использованы защитные сооружения"/>
+        <setColumnRemarks tableName="creature_attacks" columnName="military_response_time_minutes"
+                          remarks="Время отклика военных в минутах"/>
+
+    </changeSet>
+
+</databaseChangeLog>

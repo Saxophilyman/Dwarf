@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Dwarf_Equipment -->
+    <!-- Снаряжение гномов (Dwarf_Equipment): связь n:m между dwarves и equipment -->
+    <changeSet id="20250424-11-create-dwarf-equipment" author="Saxophilyman">
+        <createTable tableName="dwarf_equipment">
+            <column name="dwarf_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="equipment_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quality" type="varchar(50)"/>
+            <column name="equipped_date" type="date"/>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="dwarf_equipment"
+                       columnNames="dwarf_id, equipment_id"
+                       constraintName="pk_dwarf_equipment"/>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="dwarf_equipment"
+                                 baseColumnNames="dwarf_id"
+                                 constraintName="fk_dwarf_equipment_dwarf"
+                                 referencedTableName="dwarves"
+                                 referencedColumnNames="dwarf_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="dwarf_equipment"
+                                 baseColumnNames="equipment_id"
+                                 constraintName="fk_dwarf_equipment_equipment"
+                                 referencedTableName="equipment"
+                                 referencedColumnNames="equipment_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="dwarf_equipment" columnName="dwarf_id"
+                          remarks="Идентификатор гнома, которому принадлежит снаряжение"/>
+        <setColumnRemarks tableName="dwarf_equipment" columnName="equipment_id"
+                          remarks="Идентификатор снаряжения"/>
+        <setColumnRemarks tableName="dwarf_equipment" columnName="quality"
+                          remarks="Качество снаряжения у данного гнома"/>
+        <setColumnRemarks tableName="dwarf_equipment" columnName="equipped_date"
+                          remarks="Дата, когда снаряжение было выдано гному"/>
+    </changeSet>
+
+</databaseChangeLog>

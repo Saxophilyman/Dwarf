@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Squad_Operations -->
+    <!-- Операции отрядов (Squad_Operations): Проводятся отрядами (n:1), содержат информацию о военных операциях-->
+    <changeSet id="20250425-3-create-squad-operations" author="Saxophilyman">
+        <createTable tableName="squad_operations">
+            <column name="operation_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="squad_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_date" type="date"/>
+            <column name="end_date" type="date"/>
+            <column name="status" type="varchar(50)"/>
+        </createTable>
+
+        <!-- Внешний ключ на military_squads -->
+        <addForeignKeyConstraint baseTableName="squad_operations"
+                                 baseColumnNames="squad_id"
+                                 constraintName="fk_operations_squad"
+                                 referencedTableName="military_squads"
+                                 referencedColumnNames="squad_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="squad_operations" columnName="operation_id"
+                          remarks="Уникальный идентификатор операции"/>
+        <setColumnRemarks tableName="squad_operations" columnName="squad_id"
+                          remarks="Идентификатор отряда, выполняющего операцию"/>
+        <setColumnRemarks tableName="squad_operations" columnName="type"
+                          remarks="Тип операции (патруль, защита, разведка и т.д.)"/>
+        <setColumnRemarks tableName="squad_operations" columnName="start_date"
+                          remarks="Дата начала операции"/>
+        <setColumnRemarks tableName="squad_operations" columnName="end_date"
+                          remarks="Дата завершения операции"/>
+        <setColumnRemarks tableName="squad_operations" columnName="status"
+                          remarks="Статус операции (например, planned, active, completed)"/>
+
+    </changeSet>
+
+</databaseChangeLog>

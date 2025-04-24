@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Squad_Equipment -->
+    <!-- Снаряжение отрядов (Squad_Equipment): Связывает отряды со снаряжением (n:m)-->
+    <changeSet id="20250425-2-create-squad-equipment" author="Saxophilyman">
+        <createTable tableName="squad_equipment">
+            <column name="squad_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="equipment_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="int"/>
+            <column name="issued_date" type="date"/>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="squad_equipment"
+                       columnNames="squad_id, equipment_id"
+                       constraintName="pk_squad_equipment"/>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="squad_equipment"
+                                 baseColumnNames="squad_id"
+                                 constraintName="fk_squad_equipment_squad"
+                                 referencedTableName="military_squads"
+                                 referencedColumnNames="squad_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="squad_equipment"
+                                 baseColumnNames="equipment_id"
+                                 constraintName="fk_squad_equipment_equipment"
+                                 referencedTableName="equipment"
+                                 referencedColumnNames="equipment_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="squad_equipment" columnName="squad_id"
+                          remarks="Идентификатор отряда, получившего снаряжение"/>
+        <setColumnRemarks tableName="squad_equipment" columnName="equipment_id"
+                          remarks="Идентификатор снаряжения, выданного отряду"/>
+        <setColumnRemarks tableName="squad_equipment" columnName="quantity"
+                          remarks="Количество выданного снаряжения"/>
+        <setColumnRemarks tableName="squad_equipment" columnName="issued_date"
+                          remarks="Дата выдачи снаряжения конкретному отряду"/>
+
+        <!-- Ограничение на количество -->
+        <sql>
+            ALTER TABLE squad_equipment
+                ADD CONSTRAINT chk_squad_equipment_quantity CHECK (quantity >= 0);
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>
