@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Project_Dependencies -->
+    <!-- Зависимости проектов (Project_Dependencies): Определяет зависимости между проектами (n:m) -->
+    <changeSet id="20250425-8-create-project-dependencies" author="Saxophilyman">
+        <createTable tableName="project_dependencies">
+            <column name="project_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dependent_project_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dependency_type" type="varchar(100)"/>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="project_dependencies"
+                       columnNames="project_id, dependent_project_id"
+                       constraintName="pk_project_dependencies"/>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="project_dependencies"
+                                 baseColumnNames="project_id"
+                                 constraintName="fk_dependencies_main_project"
+                                 referencedTableName="projects"
+                                 referencedColumnNames="project_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="project_dependencies"
+                                 baseColumnNames="dependent_project_id"
+                                 constraintName="fk_dependencies_dependent_project"
+                                 referencedTableName="projects"
+                                 referencedColumnNames="project_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="project_dependencies" columnName="project_id"
+                          remarks="Проект, у которого есть зависимость"/>
+        <setColumnRemarks tableName="project_dependencies" columnName="dependent_project_id"
+                          remarks="Проект, от которого зависит выполнение основного"/>
+        <setColumnRemarks tableName="project_dependencies" columnName="dependency_type"
+                          remarks="Тип зависимости (например, blocker, prerequisite, subtask)"/>
+
+    </changeSet>
+
+</databaseChangeLog>

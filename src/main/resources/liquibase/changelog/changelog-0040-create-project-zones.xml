@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Project_Zones -->
+    <!-- Зоны проектов (Project_Zones): Связывает проекты с зонами крепости (n:m) -->
+    <changeSet id="20250425-9-create-project-zones" author="Saxophilyman">
+        <createTable tableName="project_zones">
+            <column name="project_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="zone_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area" type="varchar(255)"/>
+            <column name="purpose" type="varchar(100)"/>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="project_zones"
+                       columnNames="project_id, zone_id"
+                       constraintName="pk_project_zones"/>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="project_zones"
+                                 baseColumnNames="project_id"
+                                 constraintName="fk_project_zones_project"
+                                 referencedTableName="projects"
+                                 referencedColumnNames="project_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="project_zones"
+                                 baseColumnNames="zone_id"
+                                 constraintName="fk_project_zones_location"
+                                 referencedTableName="locations"
+                                 referencedColumnNames="location_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="project_zones" columnName="project_id"
+                          remarks="Проект, связанный с зоной"/>
+        <setColumnRemarks tableName="project_zones" columnName="zone_id"
+                          remarks="Зона, в которой реализуется проект"/>
+        <setColumnRemarks tableName="project_zones" columnName="area"
+                          remarks="Описание площади или метража задействованной зоны"/>
+        <setColumnRemarks tableName="project_zones" columnName="purpose"
+                          remarks="Цель использования зоны в рамках проекта (например, строительство, раскопки)"/>
+
+    </changeSet>
+
+</databaseChangeLog>

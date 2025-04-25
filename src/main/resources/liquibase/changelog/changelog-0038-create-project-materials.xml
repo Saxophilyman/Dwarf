@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Project_Materials -->
+    <!-- Материалы проектов (Project_Materials): Связывает проекты с необходимыми материалами (n:m) -->
+    <changeSet id="20250425-7-create-project-materials" author="Saxophilyman">
+        <createTable tableName="project_materials">
+            <column name="project_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="material_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity_required" type="int"/>
+            <column name="quantity_available" type="int"/>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="project_materials"
+                       columnNames="project_id, material_id"
+                       constraintName="pk_project_materials"/>
+
+        <addForeignKeyConstraint baseTableName="project_materials" baseColumnNames="project_id"
+                                 constraintName="fk_project_materials_project"
+                                 referencedTableName="projects"
+                                 referencedColumnNames="project_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="project_materials" baseColumnNames="material_id"
+                                 constraintName="fk_project_materials_resource"
+                                 referencedTableName="resources"
+                                 referencedColumnNames="resource_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="project_materials" columnName="project_id"
+                          remarks="Проект, в рамках которого используется материал"/>
+        <setColumnRemarks tableName="project_materials" columnName="material_id"
+                          remarks="Материал, необходимый для проекта"/>
+        <setColumnRemarks tableName="project_materials" columnName="quantity_required"
+                          remarks="Требуемое количество материала для завершения проекта"/>
+        <setColumnRemarks tableName="project_materials" columnName="quantity_available"
+                          remarks="Фактически доступное количество материала"/>
+
+        <!-- Ограничения -->
+        <sql>
+            ALTER TABLE project_materials
+                ADD CONSTRAINT chk_project_materials_quantities CHECK (
+                    quantity_required &gt;= 0 AND quantity_available &gt;= 0
+                    );
+        </sql>
+
+    </changeSet>
+
+
+</databaseChangeLog>

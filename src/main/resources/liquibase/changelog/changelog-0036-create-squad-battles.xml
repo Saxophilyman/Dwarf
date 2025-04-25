@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Squad_Battles -->
+    <!-- Сражения отрядов (Squad_Battles): Связаны с отрядами (n:1), содержат информацию о сражениях -->
+<changeSet id="20250425-5-create-squad-battles" author="Saxophilyman">
+    <createTable tableName="squad_battles">
+        <column name="report_id" type="int" autoIncrement="true">
+            <constraints primaryKey="true" nullable="false"/>
+        </column>
+        <column name="squad_id" type="int">
+            <constraints nullable="false"/>
+        </column>
+        <column name="date" type="date">
+            <constraints nullable="false"/>
+        </column>
+        <column name="outcome" type="varchar(100)"/>
+        <column name="enemy_type" type="varchar(100)"/>
+        <column name="casualties" type="int"/>
+        <column name="enemy_casualties" type="int"/>
+    </createTable>
+
+    <!-- Внешний ключ на military_squads -->
+    <addForeignKeyConstraint baseTableName="squad_battles"
+                             baseColumnNames="squad_id"
+                             constraintName="fk_squad_battles_squad"
+                             referencedTableName="military_squads"
+                             referencedColumnNames="squad_id"
+                             onDelete="CASCADE"/>
+
+    <!-- Комментарии -->
+    <setColumnRemarks tableName="squad_battles" columnName="report_id"
+                      remarks="Уникальный идентификатор отчета о сражении"/>
+    <setColumnRemarks tableName="squad_battles" columnName="squad_id"
+                      remarks="Идентификатор отряда, участвовавшего в сражении"/>
+    <setColumnRemarks tableName="squad_battles" columnName="date"
+                      remarks="Дата проведения сражения"/>
+    <setColumnRemarks tableName="squad_battles" columnName="outcome"
+                      remarks="Исход сражения (например, победа, поражение)"/>
+    <setColumnRemarks tableName="squad_battles" columnName="enemy_type"
+                      remarks="Тип врага, с которым сражались (гоблины, чудовища и т.д.)"/>
+    <setColumnRemarks tableName="squad_battles" columnName="casualties"
+                      remarks="Потери среди отряда"/>
+    <setColumnRemarks tableName="squad_battles" columnName="enemy_casualties"
+                      remarks="Потери среди врага"/>
+
+    <!-- Ограничения -->
+    <sql>
+        ALTER TABLE squad_battles
+            ADD CONSTRAINT chk_squad_battles_casualties CHECK (casualties &gt;= 0 AND enemy_casualties &gt;= 0);
+    </sql>
+
+</changeSet>
+
+
+</databaseChangeLog>

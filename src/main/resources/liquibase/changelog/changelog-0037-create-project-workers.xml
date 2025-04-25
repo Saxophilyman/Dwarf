@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Project_Workers -->
+    <!-- Работники проектов (Project_Workers): Связывает проекты с назначенными гномами (n:m) -->
+    <changeSet id="20250425-6-create-project-workers" author="Saxophilyman">
+        <createTable tableName="project_workers">
+            <column name="project_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dwarf_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assignment_date" type="date"/>
+            <column name="role" type="varchar(100)"/>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="project_workers"
+                       columnNames="project_id, dwarf_id"
+                       constraintName="pk_project_workers"/>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="project_workers"
+                                 baseColumnNames="project_id"
+                                 constraintName="fk_project_workers_project"
+                                 referencedTableName="projects"
+                                 referencedColumnNames="project_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="project_workers"
+                                 baseColumnNames="dwarf_id"
+                                 constraintName="fk_project_workers_dwarf"
+                                 referencedTableName="dwarves"
+                                 referencedColumnNames="dwarf_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="project_workers" columnName="project_id"
+                          remarks="Идентификатор проекта, над которым работает гном"/>
+        <setColumnRemarks tableName="project_workers" columnName="dwarf_id"
+                          remarks="Идентификатор гнома, назначенного на проект"/>
+        <setColumnRemarks tableName="project_workers" columnName="assignment_date"
+                          remarks="Дата назначения гнома на проект"/>
+        <setColumnRemarks tableName="project_workers" columnName="role"
+                          remarks="Роль гнома в рамках проекта (строитель, инженер и т.д.)"/>
+
+    </changeSet>
+
+
+</databaseChangeLog>
