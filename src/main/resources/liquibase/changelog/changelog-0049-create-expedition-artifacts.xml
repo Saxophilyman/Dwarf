@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Expedition_Artifacts -->
+    <!-- Артефакты экспедиций (Expedition_Artifacts): Связаны с экспедициями (n:1), содержат данные о находках -->
+    <changeSet id="20250425-18-create-expedition-artifacts" author="Saxophilyman">
+        <createTable tableName="expedition_artifacts">
+            <column name="artifact_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="expedition_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="discovery_date" type="date"/>
+            <column name="value" type="int"/>
+            <column name="description" type="text"/>
+        </createTable>
+
+        <!-- Внешний ключ -->
+        <addForeignKeyConstraint baseTableName="expedition_artifacts"
+                                 baseColumnNames="expedition_id"
+                                 constraintName="fk_artifacts_expedition"
+                                 referencedTableName="expeditions"
+                                 referencedColumnNames="expedition_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="expedition_artifacts" columnName="artifact_id"
+                          remarks="Уникальный идентификатор артефакта"/>
+        <setColumnRemarks tableName="expedition_artifacts" columnName="expedition_id"
+                          remarks="Экспедиция, во время которой был найден артефакт"/>
+        <setColumnRemarks tableName="expedition_artifacts" columnName="discovery_date"
+                          remarks="Дата обнаружения артефакта"/>
+        <setColumnRemarks tableName="expedition_artifacts" columnName="value"
+                          remarks="Ценность артефакта"/>
+        <setColumnRemarks tableName="expedition_artifacts" columnName="description"
+                          remarks="Описание артефакта или его уникальных свойств"/>
+
+        <!-- Ограничения -->
+        <sql>
+            ALTER TABLE expedition_artifacts
+                ADD CONSTRAINT chk_expedition_artifact_value CHECK (value >= 0);
+        </sql>
+
+
+    </changeSet>
+
+</databaseChangeLog>

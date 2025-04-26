@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Expedition_Creatures -->
+    <!-- Встречи с существами (Expedition_Creatures): Связывают экспедиции с встреченными существами (n:m) -->
+    <changeSet id="20250425-16-create-expedition-creatures" author="Saxophilyman">
+        <createTable tableName="expedition_creatures">
+            <column name="expedition_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creature_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="encounter_date" type="date"/>
+            <column name="outcome" type="varchar(100)"/>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="expedition_creatures"
+                       columnNames="expedition_id, creature_id"
+                       constraintName="pk_expedition_creatures"/>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="expedition_creatures"
+                                 baseColumnNames="expedition_id"
+                                 constraintName="fk_expedition_creatures_expedition"
+                                 referencedTableName="expeditions"
+                                 referencedColumnNames="expedition_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="expedition_creatures"
+                                 baseColumnNames="creature_id"
+                                 constraintName="fk_expedition_creatures_creature"
+                                 referencedTableName="creatures"
+                                 referencedColumnNames="creature_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="expedition_creatures" columnName="expedition_id"
+                          remarks="Идентификатор экспедиции"/>
+        <setColumnRemarks tableName="expedition_creatures" columnName="creature_id"
+                          remarks="Идентификатор встреченного существа"/>
+        <setColumnRemarks tableName="expedition_creatures" columnName="encounter_date"
+                          remarks="Дата встречи с существом"/>
+        <setColumnRemarks tableName="expedition_creatures" columnName="outcome"
+                          remarks="Результат встречи (например, избегание, бой, наблюдение)"/>
+
+    </changeSet>
+
+</databaseChangeLog>

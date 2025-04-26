@@ -46,16 +46,16 @@
     <include file="/liquibase/changelog/changelog-0038-create-project-materials.xml"/>
     <include file="/liquibase/changelog/changelog-0039-create-project-dependencies.xml"/>
     <include file="/liquibase/changelog/changelog-0040-create-project-zones.xml"/>
-<!--    <include file="/liquibase/changelog/changelog-0041-create-trade-transactions.xml"/>-->
-<!--    <include file="/liquibase/changelog/changelog-0042-create-dwarf-interests.xml"/>-->
-<!--    <include file="/liquibase/changelog/changelog-0043-create-caravan-goods.xml"/>-->
-<!--    <include file="/liquibase/changelog/changelog-0044-create-diplomatic-events.xml"/>-->
-<!--    <include file="/liquibase/changelog/changelog-0045-create-expedition-members.xml"/>-->
-<!--    <include file="/liquibase/changelog/changelog-0046-create-expedition-sites.xml"/>-->
-<!--    <include file="/liquibase/changelog/changelog-0046-create-expedition-creatures.xml"/>-->
-<!--    <include file="/liquibase/changelog/changelog-0046-create-expedition-equipment.xml"/>-->
-<!--    <include file="/liquibase/changelog/changelog-0046-create-expedition-artifacts.xml"/>-->
-<!--    <include file="/liquibase/changelog/changelog-0046-create-expedition-reports.xml"/>-->
+    <include file="/liquibase/changelog/changelog-0041-create-trade-transactions.xml"/>
+    <include file="/liquibase/changelog/changelog-0042-create-dwarf-interests.xml"/>
+    <include file="/liquibase/changelog/changelog-0043-create-caravan-goods.xml"/>
+    <include file="/liquibase/changelog/changelog-0044-create-diplomatic-events.xml"/>
+    <include file="/liquibase/changelog/changelog-0045-create-expedition-members.xml"/>
+    <include file="/liquibase/changelog/changelog-0046-create-expedition-sites.xml"/>
+    <include file="/liquibase/changelog/changelog-0047-create-expedition-creatures.xml"/>
+    <include file="/liquibase/changelog/changelog-0048-create-expedition-equipment.xml"/>
+    <include file="/liquibase/changelog/changelog-0049-create-expedition-artifacts.xml"/>
+    <include file="/liquibase/changelog/changelog-0050-create-expedition-reports.xml"/>
 
 
 

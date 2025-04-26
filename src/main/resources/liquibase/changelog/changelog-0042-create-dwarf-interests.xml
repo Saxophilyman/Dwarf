@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Dwarf_Interests -->
+    <!-- Интересы гномов (Dwarf_Interests): Связаны с гномами (n:1), определяют предпочтения в товарах -->
+    <changeSet id="20250425-11-create-dwarf-interests" author="Saxophilyman">
+        <createTable tableName="dwarf_interests">
+            <column name="dwarf_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="goods_type" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="interest_level" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="dwarf_interests"
+                       columnNames="dwarf_id, goods_type"
+                       constraintName="pk_dwarf_interests"/>
+
+        <!-- Внешний ключ на dwarves -->
+        <addForeignKeyConstraint baseTableName="dwarf_interests"
+                                 baseColumnNames="dwarf_id"
+                                 constraintName="fk_dwarf_interests_dwarf"
+                                 referencedTableName="dwarves"
+                                 referencedColumnNames="dwarf_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="dwarf_interests" columnName="dwarf_id"
+                          remarks="Идентификатор гнома, которому принадлежит интерес"/>
+        <setColumnRemarks tableName="dwarf_interests" columnName="goods_type"
+                          remarks="Тип товара, вызывающий интерес (например, weapon, cloth, food)"/>
+        <setColumnRemarks tableName="dwarf_interests" columnName="interest_level"
+                          remarks="Уровень интереса гнома к данному типу товара (0–100)"/>
+
+        <!-- Ограничения -->
+        <sql>
+            ALTER TABLE dwarf_interests
+                ADD CONSTRAINT chk_interest_level_range CHECK (interest_level BETWEEN 0 AND 100);
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

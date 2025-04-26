@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Expedition_Reports -->
+    <!-- Отчеты экспедиций (Expedition_Reports): Связаны с экспедициями (n:1), содержат информацию о результатах -->
+    <changeSet id="20250425-19-create-expedition-reports" author="Saxophilyman">
+        <createTable tableName="expedition_reports">
+            <column name="report_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="expedition_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="int"/>
+            <column name="title" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="text"/>
+            <column name="creation_date" type="date"/>
+        </createTable>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="expedition_reports"
+                                 baseColumnNames="expedition_id"
+                                 constraintName="fk_reports_expedition"
+                                 referencedTableName="expeditions"
+                                 referencedColumnNames="expedition_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="expedition_reports"
+                                 baseColumnNames="author_id"
+                                 constraintName="fk_reports_author"
+                                 referencedTableName="dwarves"
+                                 referencedColumnNames="dwarf_id"
+                                 onDelete="SET NULL"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="expedition_reports" columnName="report_id"
+                          remarks="Уникальный идентификатор отчета"/>
+        <setColumnRemarks tableName="expedition_reports" columnName="expedition_id"
+                          remarks="Экспедиция, к которой относится отчет"/>
+        <setColumnRemarks tableName="expedition_reports" columnName="author_id"
+                          remarks="Гном, написавший отчёт (если применимо)"/>
+        <setColumnRemarks tableName="expedition_reports" columnName="title"
+                          remarks="Название отчета"/>
+        <setColumnRemarks tableName="expedition_reports" columnName="content"
+                          remarks="Текстовое содержание отчета"/>
+        <setColumnRemarks tableName="expedition_reports" columnName="creation_date"
+                          remarks="Дата создания отчета"/>
+
+
+    </changeSet>
+
+</databaseChangeLog>

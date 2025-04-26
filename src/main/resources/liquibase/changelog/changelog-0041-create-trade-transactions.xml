@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Trade_Transactions -->
+    <!-- Торговые транзакции (Trade_Transactions): Связаны с караванами (n:1), фиксируют обмен товарами -->
+    <changeSet id="20250425-10-create-trade-transactions" author="Saxophilyman">
+        <createTable tableName="trade_transactions">
+            <column name="transaction_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="caravan_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fortress_items" type="text"/>
+            <column name="caravan_items" type="text"/>
+            <column name="value" type="int"/>
+            <column name="balance_direction" type="varchar(50)"/>
+        </createTable>
+
+        <!-- Внешний ключ -->
+        <addForeignKeyConstraint
+                baseTableName="trade_transactions"
+                baseColumnNames="caravan_id"
+                constraintName="fk_trade_transactions_caravan"
+                referencedTableName="caravans"
+                referencedColumnNames="caravan_id"
+                onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="trade_transactions" columnName="transaction_id"
+                          remarks="Уникальный идентификатор транзакции"/>
+        <setColumnRemarks tableName="trade_transactions" columnName="caravan_id"
+                          remarks="Караван, участвовавший в сделке"/>
+        <setColumnRemarks tableName="trade_transactions" columnName="date"
+                          remarks="Дата совершения сделки"/>
+        <setColumnRemarks tableName="trade_transactions" columnName="fortress_items"
+                          remarks="Список предметов, отданных крепостью"/>
+        <setColumnRemarks tableName="trade_transactions" columnName="caravan_items"
+                          remarks="Список предметов, отданных караваном"/>
+        <setColumnRemarks tableName="trade_transactions" columnName="value"
+                          remarks="Общая стоимость сделки"/>
+        <setColumnRemarks tableName="trade_transactions" columnName="balance_direction"
+                          remarks="Баланс сделки (например, profit, loss, balanced)"/>
+
+        <!-- Ограничения -->
+        <sql>
+            ALTER TABLE trade_transactions
+                ADD CONSTRAINT chk_trade_value CHECK (value &gt;= 0);
+        </sql>
+        <sql>
+            ALTER TABLE trade_transactions
+                ADD CONSTRAINT chk_trade_balance CHECK (
+                    balance_direction IN ('profit', 'loss', 'balanced')
+                    );
+        </sql>
+
+
+    </changeSet>
+
+</databaseChangeLog>

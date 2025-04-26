@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Expedition_Sites -->
+    <!-- Места экспедиций (Expedition_Sites): Связывают экспедиции с посещенными местами (n:m) -->
+    <changeSet id="20250425-15-create-expedition-sites" author="Saxophilyman">
+        <createTable tableName="expedition_sites">
+            <column name="expedition_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="site_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="discovery_date" type="date"/>
+            <column name="notes" type="text"/>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="expedition_sites"
+                       columnNames="expedition_id, site_id"
+                       constraintName="pk_expedition_sites"/>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="expedition_sites"
+                                 baseColumnNames="expedition_id"
+                                 constraintName="fk_expedition_sites_expedition"
+                                 referencedTableName="expeditions"
+                                 referencedColumnNames="expedition_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="expedition_sites"
+                                 baseColumnNames="site_id"
+                                 constraintName="fk_expedition_sites_extraction_site"
+                                 referencedTableName="extraction_sites"
+                                 referencedColumnNames="site_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="expedition_sites" columnName="expedition_id"
+                          remarks="Экспедиция, посетившая место"/>
+        <setColumnRemarks tableName="expedition_sites" columnName="site_id"
+                          remarks="Посещённое месторождение или объект"/>
+        <setColumnRemarks tableName="expedition_sites" columnName="discovery_date"
+                          remarks="Дата посещения места в рамках экспедиции"/>
+        <setColumnRemarks tableName="expedition_sites" columnName="notes"
+                          remarks="Дополнительные заметки или находки на месте"/>
+
+    </changeSet>
+
+</databaseChangeLog>

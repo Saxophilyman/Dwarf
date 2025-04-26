@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Expedition_Members -->
+    <!-- Участники экспедиций (Expedition_Members): Связывают экспедиции с гномами (n:m) -->
+    <changeSet id="20250425-14-create-expedition-members" author="Saxophilyman">
+        <createTable tableName="expedition_members">
+            <column name="expedition_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dwarf_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="varchar(100)"/>
+            <column name="survived" type="boolean"/>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="expedition_members"
+                       columnNames="expedition_id, dwarf_id"
+                       constraintName="pk_expedition_members"/>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="expedition_members"
+                                 baseColumnNames="expedition_id"
+                                 constraintName="fk_expedition_members_expedition"
+                                 referencedTableName="expeditions"
+                                 referencedColumnNames="expedition_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="expedition_members"
+                                 baseColumnNames="dwarf_id"
+                                 constraintName="fk_expedition_members_dwarf"
+                                 referencedTableName="dwarves"
+                                 referencedColumnNames="dwarf_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="expedition_members" columnName="expedition_id"
+                          remarks="Идентификатор экспедиции"/>
+        <setColumnRemarks tableName="expedition_members" columnName="dwarf_id"
+                          remarks="Идентификатор гнома"/>
+        <setColumnRemarks tableName="expedition_members" columnName="role"
+                          remarks="Роль гнома в экспедиции (разведчик, защитник, лекарь и т.д.)"/>
+        <setColumnRemarks tableName="expedition_members" columnName="survived"
+                          remarks="Указание, выжил ли гном после экспедиции"/>
+
+    </changeSet>
+
+</databaseChangeLog>

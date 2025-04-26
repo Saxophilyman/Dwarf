@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Caravan_Goods -->
+    <!-- Товары караванов (Caravan_Goods): Связаны с караванами (n:1), представляют доступные товары -->
+    <changeSet id="20250425-12-create-caravan-goods" author="Saxophilyman">
+        <createTable tableName="caravan_goods">
+            <column name="goods_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="caravan_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(50)"/>
+            <column name="quantity" type="int"/>
+            <column name="value" type="int"/>
+            <column name="material_type" type="varchar(50)"/>
+            <column name="price_fluctuation" type="decimal(10,2)"/>
+            <column name="original_product_id" type="int"/>
+        </createTable>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="caravan_goods"
+                                 baseColumnNames="caravan_id"
+                                 constraintName="fk_caravan_goods_caravan"
+                                 referencedTableName="caravans"
+                                 referencedColumnNames="caravan_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="caravan_goods"
+                                 baseColumnNames="original_product_id"
+                                 constraintName="fk_caravan_goods_product"
+                                 referencedTableName="products"
+                                 referencedColumnNames="product_id"
+                                 onDelete="SET NULL"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="caravan_goods" columnName="goods_id"
+                          remarks="Уникальный идентификатор товара каравана"/>
+        <setColumnRemarks tableName="caravan_goods" columnName="caravan_id"
+                          remarks="Караван, которому принадлежит товар"/>
+        <setColumnRemarks tableName="caravan_goods" columnName="name"
+                          remarks="Название товара"/>
+        <setColumnRemarks tableName="caravan_goods" columnName="type"
+                          remarks="Тип товара (например, еда, металл, ткань)"/>
+        <setColumnRemarks tableName="caravan_goods" columnName="quantity"
+                          remarks="Количество товара в караване"/>
+        <setColumnRemarks tableName="caravan_goods" columnName="value"
+                          remarks="Ценность товара в торговых единицах"/>
+        <setColumnRemarks tableName="caravan_goods" columnName="material_type"
+                          remarks="Тип материала, из которого сделан товар"/>
+        <setColumnRemarks tableName="caravan_goods" columnName="price_fluctuation"
+                          remarks="Флуктуация цены по сравнению с базовой"/>
+        <setColumnRemarks tableName="caravan_goods" columnName="original_product_id"
+                          remarks="Ссылка на оригинальный продукт (если применимо)"/>
+
+        <!-- Ограничения -->
+        <sql>
+            ALTER TABLE caravan_goods
+                ADD CONSTRAINT chk_caravan_goods_quantity CHECK (quantity &gt;= 0);
+        </sql>
+        <sql>
+            ALTER TABLE caravan_goods
+                ADD CONSTRAINT chk_caravan_goods_value CHECK (value &gt;= 0);
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

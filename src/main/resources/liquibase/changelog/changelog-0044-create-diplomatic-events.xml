@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Diplomatic_Events -->
+    <!-- Дипломатические события (Diplomatic_Events): Связаны с караванами (n:1), фиксируют отношения с цивилизациями -->
+    <changeSet id="20250425-13-create-diplomatic-events" author="Saxophilyman">
+        <createTable tableName="diplomatic_events">
+            <column name="event_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="caravan_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="outcome" type="varchar(100)"/>
+            <column name="date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="relationship_change" type="int"/>
+            <column name="civilization_type" type="varchar(100)"/>
+        </createTable>
+
+        <!-- Внешний ключ на caravans -->
+        <addForeignKeyConstraint baseTableName="diplomatic_events"
+                                 baseColumnNames="caravan_id"
+                                 constraintName="fk_diplomatic_events_caravan"
+                                 referencedTableName="caravans"
+                                 referencedColumnNames="caravan_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="diplomatic_events" columnName="event_id"
+                          remarks="Уникальный идентификатор дипломатического события"/>
+        <setColumnRemarks tableName="diplomatic_events" columnName="caravan_id"
+                          remarks="Караван, в рамках которого произошло событие"/>
+        <setColumnRemarks tableName="diplomatic_events" columnName="type"
+                          remarks="Тип дипломатического события (например, переговоры, конфликт)"/>
+        <setColumnRemarks tableName="diplomatic_events" columnName="outcome"
+                          remarks="Результат события (например, союз, нейтралитет, вражда)"/>
+        <setColumnRemarks tableName="diplomatic_events" columnName="date"
+                          remarks="Дата события"/>
+        <setColumnRemarks tableName="diplomatic_events" columnName="relationship_change"
+                          remarks="Изменение отношений (например, +10, -20)"/>
+        <setColumnRemarks tableName="diplomatic_events" columnName="civilization_type"
+                          remarks="Цивилизация, с которой произошло взаимодействие"/>
+
+        <!-- Ограничения -->
+        <sql>
+            ALTER TABLE diplomatic_events
+                ADD CONSTRAINT chk_relationship_change_range CHECK (relationship_change BETWEEN -100 AND 100);
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

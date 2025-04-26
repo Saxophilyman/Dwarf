@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Таблица Expedition_Equipment -->
+    <!-- Снаряжение экспедиций (Expedition_Equipment): Связывает экспедиции со снаряжением (n:m) -->
+    <changeSet id="20250425-17-create-expedition-equipment" author="Saxophilyman">
+        <createTable tableName="expedition_equipment">
+            <column name="expedition_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="equipment_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="int"/>
+            <column name="return_condition" type="varchar(100)"/>
+        </createTable>
+
+        <!-- Составной первичный ключ -->
+        <addPrimaryKey tableName="expedition_equipment"
+                       columnNames="expedition_id, equipment_id"
+                       constraintName="pk_expedition_equipment"/>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint baseTableName="expedition_equipment"
+                                 baseColumnNames="expedition_id"
+                                 constraintName="fk_exp_equipment_expedition"
+                                 referencedTableName="expeditions"
+                                 referencedColumnNames="expedition_id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="expedition_equipment"
+                                 baseColumnNames="equipment_id"
+                                 constraintName="fk_exp_equipment_equipment"
+                                 referencedTableName="equipment"
+                                 referencedColumnNames="equipment_id"
+                                 onDelete="CASCADE"/>
+
+        <!-- Комментарии -->
+        <setColumnRemarks tableName="expedition_equipment" columnName="expedition_id"
+                          remarks="Экспедиция, получившая снаряжение"/>
+        <setColumnRemarks tableName="expedition_equipment" columnName="equipment_id"
+                          remarks="Снаряжение, выданное на экспедицию"/>
+        <setColumnRemarks tableName="expedition_equipment" columnName="quantity"
+                          remarks="Количество единиц снаряжения"/>
+        <setColumnRemarks tableName="expedition_equipment" columnName="return_condition"
+                          remarks="Состояние снаряжения после возвращения (исправное, повреждено, утеряно и т.д.)"/>
+
+        <!-- Ограничения -->
+        <sql>
+            ALTER TABLE expedition_equipment
+                ADD CONSTRAINT chk_expedition_equipment_quantity CHECK (quantity >= 0);
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>
